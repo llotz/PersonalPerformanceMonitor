@@ -7,13 +7,17 @@ namespace PersonalPerformanceMonitor
 	public partial class DataPointAggregationForm : Form
 	{
 		private DataPoint dataPoint = new DataPoint();
+		private bool edit = false;
 
 		public DataPointAggregationForm(DataPoint dp = null)
 		{
 			InitializeComponent();
 			dataPoint.RecordedTime = DateTime.Now;
 			if (dp != null)
+			{
 				dataPoint = dp;
+				edit = true;
+			}
 
 			string add = dp != null ? "Edit" : "New";
 			Text = $"{add} Datapoint {dataPoint.RecordedTime.ToShortDateString()} {dataPoint.RecordedTime.ToShortTimeString()}";
@@ -23,16 +27,18 @@ namespace PersonalPerformanceMonitor
 
 		private void BindDataToControls()
 		{
-
+			//textbox.DataBindings.Add("Text",sourceObject,"FirstName");
+			dateTimePicker1.DataBindings.Add("Value", dataPoint, nameof(dataPoint.RecordedTime));
+			numericUpDown1.DataBindings.Add("Value", dataPoint, nameof(dataPoint.Performance));
+			cb_Motivation.DataBindings.Add("Checked", dataPoint, nameof(dataPoint.Motivation));
+			cb_Procrastination.DataBindings.Add("Checked", dataPoint, nameof(dataPoint.Procrastinating));
 		}
 
 		private void btn_Save_Click(object sender, System.EventArgs e)
 		{
-			dataPoint.Motivation = cb_Motivation.Checked;
-			dataPoint.Performance = (int)numericUpDown1.Value;
-			dataPoint.Procrastinating = cb_Procrastination.Checked;
-
-			DataManager.AddDataPoint(dataPoint);
+			if (!edit)
+				DataManager.AddDataPoint(dataPoint);
+			DataManager.SaveToStorage();
 			this.Close();
 		}
 
