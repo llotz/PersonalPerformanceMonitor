@@ -54,6 +54,8 @@ namespace PersonalPerformanceMonitor
 
 		private void btn_Edit_Click(object sender, EventArgs e)
 		{
+			foreach (DataGridViewRow row in dataGridView1.SelectedRows)
+				new DataPointAggregationForm((DataPoint)row.DataBoundItem).Show();
 		}
 	}
 }
