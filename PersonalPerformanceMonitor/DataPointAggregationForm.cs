@@ -12,6 +12,9 @@ namespace PersonalPerformanceMonitor
 		public DataPointAggregationForm(DataPoint dp = null)
 		{
 			InitializeComponent();
+			dateTimePicker1.Format = DateTimePickerFormat.Custom;
+			dateTimePicker1.CustomFormat = "dd.MM.yyyy HH:mm";
+
 			dataPoint.RecordedTime = DateTime.Now;
 			if (dp != null)
 			{
