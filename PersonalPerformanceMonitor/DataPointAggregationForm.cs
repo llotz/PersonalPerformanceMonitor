@@ -6,12 +6,13 @@ namespace PersonalPerformanceMonitor
 {
 	public partial class DataPointAggregationForm : Form
 	{
-		private DataPoint dataPoint = new DataPoint();
+		private DataPoint dataPoint;
 		private bool edit = false;
 
 		public DataPointAggregationForm(DataPoint dp = null)
 		{
 			InitializeComponent();
+			dataPoint = new DataPoint();
 			dateTimePicker1.Format = DateTimePickerFormat.Custom;
 			dateTimePicker1.CustomFormat = "dd.MM.yyyy HH:mm";
 
@@ -48,6 +49,11 @@ namespace PersonalPerformanceMonitor
 		private void btn_Close_Click(object sender, System.EventArgs e)
 		{
 			this.Close();
+		}
+
+		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+		{
+			dataPoint.Performance = Convert.ToInt32(numericUpDown1.Value);
 		}
 	}
 }
