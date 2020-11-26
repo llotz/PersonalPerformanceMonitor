@@ -21,6 +21,8 @@ namespace PersonalPerformanceMonitor
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             if (DataManager.DataPoints.Count > 0)
                 nextAggregationTime = DataManager.DataPoints.Max(x => x.RecordedTime).AddMinutes(Settings.MinutesBetweenDataAggregation);
+            var hourlyStats = new Evaluator(DataManager.DataPoints.ToList()).GetAverageByHour();
+            dataGridView2.DataSource = hourlyStats.ToList();
         }
 
         private void btn_New_Click(object sender, System.EventArgs e)
