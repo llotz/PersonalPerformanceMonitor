@@ -21,24 +21,30 @@ namespace PersonalPerformanceMonitor
 			{
 				dataPoint = dp;
 				edit = true;
+				HighlightButton(dp);
 			}
 
 			string add = dp != null ? "Edit" : "New";
 			Text = $"{add} Datapoint {dataPoint.RecordedTime.ToShortDateString()} {dataPoint.RecordedTime.ToShortTimeString()}";
 
 			BindDataToControls();
+
+		}
+
+		private void HighlightButton(DataPoint dp)
+		{
+			this.GetType().GetProperty($"btn{dp.Performance}")?.SetValue("FlatStyle", FlatStyle.Standard);
 		}
 
 		private void BindDataToControls()
 		{
 			//textbox.DataBindings.Add("Text",sourceObject,"FirstName");
 			dateTimePicker1.DataBindings.Add("Value", dataPoint, nameof(dataPoint.RecordedTime));
-			numericUpDown1.DataBindings.Add("Value", dataPoint, nameof(dataPoint.Performance));
 			cb_Motivation.DataBindings.Add("Checked", dataPoint, nameof(dataPoint.Motivation));
 			cb_Procrastination.DataBindings.Add("Checked", dataPoint, nameof(dataPoint.Procrastinating));
 		}
 
-		private void btn_Save_Click(object sender, System.EventArgs e)
+		private void SaveDataPoint()
 		{
 			if (!edit)
 				DataManager.AddDataPoint(dataPoint);
@@ -51,9 +57,10 @@ namespace PersonalPerformanceMonitor
 			this.Close();
 		}
 
-		private void numericUpDown1_ValueChanged(object sender, EventArgs e)
+		private void btn_Click(object sender, EventArgs e)
 		{
-			dataPoint.Performance = Convert.ToInt32(numericUpDown1.Value);
+			dataPoint.Performance = Convert.ToInt32(((Control)sender).Name.Replace("btn", ""));
+			SaveDataPoint();
 		}
 	}
 }
