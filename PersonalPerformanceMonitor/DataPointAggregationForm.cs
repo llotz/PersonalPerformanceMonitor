@@ -33,7 +33,9 @@ namespace PersonalPerformanceMonitor
 
 		private void HighlightButton(DataPoint dp)
 		{
-			this.GetType().GetProperty($"btn{dp.Performance}")?.SetValue("FlatStyle", FlatStyle.Standard);
+			this.Controls.Find($"btn{dp.Performance}", false)[0].Text = $"[{dp.Performance}]";
+
+			//this.GetType().GetProperty($"btn{dp.Performance}")?.SetValue("Text", $"[{dp.Performance}]");
 		}
 
 		private void BindDataToControls()

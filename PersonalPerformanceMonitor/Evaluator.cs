@@ -13,7 +13,7 @@ namespace PersonalPerformanceMonitor
             this.dataPoints = dataPoints;
         }
 
-        public Dictionary<int, List<DataPoint>> GetByHour()
+        private Dictionary<int, List<DataPoint>> GetByHour()
         {
             Dictionary<int, List<DataPoint>> dic = new Dictionary<int, List<DataPoint>>();
             foreach (var dp in dataPoints)
@@ -26,16 +26,16 @@ namespace PersonalPerformanceMonitor
             return dic;
         }
 
-        public List<KeyValuePair<int, int>> GetAverageByHour()
+        public List<HourlyStat> GetAverageByHour()
         {
-            var dic = new Dictionary<int, int>();
+            var list = new List<HourlyStat>();
             var byHour = GetByHour();
             foreach (KeyValuePair<int, List<DataPoint>> hourSet in byHour)
             {
                 int avg = (int)hourSet.Value.Select(x => x.Performance).Average();
-                dic.Add(hourSet.Key, avg);
+                list.Add(new HourlyStat(hourSet.Key, avg));
             }
-            List<KeyValuePair<int, int>> list = dic.OrderBy(x => x.Key).ToList();
+            list = list.OrderBy(x => x.Hour).ToList();
             return list;
         }
 

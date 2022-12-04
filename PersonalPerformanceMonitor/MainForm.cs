@@ -29,13 +29,15 @@ namespace PersonalPerformanceMonitor
         private void RecalculateStats()
         {
             var hourlyStats = new Evaluator(DataManager.DataPoints.ToList()).GetAverageByHour();
-            dataGridView2.DataSource = hourlyStats.ToList();
+            dataGridView2.DataSource = hourlyStats;
+            dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
         }
 
         private void btn_New_Click(object sender, System.EventArgs e)
         {
             aggregationForm = new DataPointAggregationForm();
             aggregationForm.Show();
+            aggregationForm.FormClosed += (s, e) => RecalculateStats();
         }
 
         private void timer_Aggregation_Tick(object sender, System.EventArgs e)
@@ -50,6 +52,7 @@ namespace PersonalPerformanceMonitor
                 aggregationForm.TopMost = true;
                 aggregationForm.Focus();
                 aggregationForm.WindowState = FormWindowState.Normal;
+                aggregationForm.FormClosed += (s, e) => RecalculateStats();
                 nextAggregationTime = DateTime.Now.AddMinutes(Settings.MinutesBetweenDataAggregation);
             }
         }
@@ -61,12 +64,17 @@ namespace PersonalPerformanceMonitor
 
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                 DataManager.RemoveDataPoint((DataPoint)row.DataBoundItem);
+            RecalculateStats();
         }
 
         private void btn_Edit_Click(object sender, EventArgs e)
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
-                new DataPointAggregationForm((DataPoint)row.DataBoundItem).Show();
+            {
+                var f = new DataPointAggregationForm((DataPoint)row.DataBoundItem);
+                f.FormClosed += (a, b) => RecalculateStats();
+                f.Show();
+            }
         }
 
         private void closeToolStripMenuItem_Click(object sender, EventArgs e)
