@@ -9,6 +9,8 @@ namespace PersonalPerformanceMonitor
     {
         private DateTime nextAggregationTime = DateTime.Now;
 
+        DataPointAggregationForm aggregationForm = null;
+
         public MainForm()
         {
             InitializeComponent();
@@ -21,26 +23,33 @@ namespace PersonalPerformanceMonitor
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             if (DataManager.DataPoints.Count > 0)
                 nextAggregationTime = DataManager.DataPoints.Max(x => x.RecordedTime).AddMinutes(Settings.MinutesBetweenDataAggregation);
+            RecalculateStats();
+        }
+
+        private void RecalculateStats()
+        {
             var hourlyStats = new Evaluator(DataManager.DataPoints.ToList()).GetAverageByHour();
             dataGridView2.DataSource = hourlyStats.ToList();
         }
 
         private void btn_New_Click(object sender, System.EventArgs e)
         {
-            DataPointAggregationForm f = new DataPointAggregationForm();
-            f.Show();
+            aggregationForm = new DataPointAggregationForm();
+            aggregationForm.Show();
         }
 
         private void timer_Aggregation_Tick(object sender, System.EventArgs e)
         {
+            if (!Settings.AutomaticAggregation) return;
+
             if (nextAggregationTime < DateTime.Now)
             {
-                var f = new DataPointAggregationForm();
-                f.Show();
-                f.TopMost = true;
-                f.WindowState = FormWindowState.Normal;
-                f.BringToFront();
-                f.Focus();
+                aggregationForm = new DataPointAggregationForm();
+                aggregationForm.Show();
+                aggregationForm.BringToFront();
+                aggregationForm.TopMost = true;
+                aggregationForm.Focus();
+                aggregationForm.WindowState = FormWindowState.Normal;
                 nextAggregationTime = DateTime.Now.AddMinutes(Settings.MinutesBetweenDataAggregation);
             }
         }
@@ -58,6 +67,17 @@ namespace PersonalPerformanceMonitor
         {
             foreach (DataGridViewRow row in dataGridView1.SelectedRows)
                 new DataPointAggregationForm((DataPoint)row.DataBoundItem).Show();
+        }
+
+        private void closeToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
+
+        private void settingsToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            SettingsForm f = new SettingsForm();
+            f.ShowDialog();
         }
     }
 }
