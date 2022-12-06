@@ -22,15 +22,16 @@ namespace PersonalPerformanceMonitor
 
         private void LoadSettings()
         {
-            txt_DataPointStoragePath.Text = Models.Settings.DataPointStorage;
-            cb_AutomaticPopup.Checked = Models.Settings.AutomaticAggregation;
-            nud_Minutes.Value = Models.Settings.MinutesBetweenDataAggregation;
+            txt_DataPointStoragePath.Text = Statics.Settings.DataPointStorage;
+            cb_AutomaticPopup.Checked = Statics.Settings.AutomaticAggregation;
+            nud_Minutes.Value = Statics.Settings.MinutesBetweenDataAggregation;
         }
 
         private void button1_Click(object sender, EventArgs e)
         {
-            Models.Settings.AutomaticAggregation = cb_AutomaticPopup.Checked;
-            Models.Settings.MinutesBetweenDataAggregation = Convert.ToInt32(nud_Minutes.Value);
+            Statics.Settings.AutomaticAggregation = cb_AutomaticPopup.Checked;
+            Statics.Settings.MinutesBetweenDataAggregation = Convert.ToInt32(nud_Minutes.Value);
+            SettingsManager.SaveToDisk();
             this.Close();
         }
 

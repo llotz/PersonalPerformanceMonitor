@@ -12,8 +12,8 @@ namespace PersonalPerformanceMonitor
 
 		public static void LoadDataFromStorage()
 		{
-			if (File.Exists(Settings.DataPointStorage))
-				using (StreamReader sr = new StreamReader(Settings.DataPointStorage))
+			if (File.Exists(Statics.Settings.DataPointStorage))
+				using (StreamReader sr = new StreamReader(Statics.Settings.DataPointStorage))
 				{
 					string jsonText = sr.ReadToEnd();
 					sr.Close();
@@ -21,10 +21,10 @@ namespace PersonalPerformanceMonitor
 				}
 		}
 
-		public static void SaveToStorage()
+		public static void SaveDataToStorage()
 		{
 			string jsonData = JsonSerializer.Serialize(DataPoints);
-			using (StreamWriter sw = new StreamWriter(Settings.DataPointStorage, false, Encoding.UTF8))
+			using (StreamWriter sw = new StreamWriter(Statics.Settings.DataPointStorage, false, Encoding.UTF8))
 			{
 				sw.Write(jsonData);
 				sw.Close();
@@ -39,7 +39,7 @@ namespace PersonalPerformanceMonitor
 		public static void RemoveDataPoint(DataPoint dataPoint)
 		{
 			DataPoints.Remove(dataPoint);
-			SaveToStorage();
+			SaveDataToStorage();
 		}
 	}
 }

@@ -13,6 +13,7 @@ namespace PersonalPerformanceMonitor
 
         public MainForm()
         {
+            SettingsManager.LoadFromDisk();
             InitializeComponent();
         }
 
@@ -22,7 +23,7 @@ namespace PersonalPerformanceMonitor
             dataGridView1.DataSource = DataManager.DataPoints;
             dataGridView1.AutoResizeColumns(DataGridViewAutoSizeColumnsMode.AllCells);
             if (DataManager.DataPoints.Count > 0)
-                nextAggregationTime = DataManager.DataPoints.Max(x => x.RecordedTime).AddMinutes(Settings.MinutesBetweenDataAggregation);
+                nextAggregationTime = DataManager.DataPoints.Max(x => x.RecordedTime).AddMinutes(Statics.Settings.MinutesBetweenDataAggregation);
             RecalculateStats();
         }
 
@@ -42,7 +43,7 @@ namespace PersonalPerformanceMonitor
 
         private void timer_Aggregation_Tick(object sender, System.EventArgs e)
         {
-            if (!Settings.AutomaticAggregation) return;
+            if (!Statics.Settings.AutomaticAggregation) return;
 
             if (nextAggregationTime < DateTime.Now)
             {
@@ -53,7 +54,7 @@ namespace PersonalPerformanceMonitor
                 aggregationForm.Focus();
                 aggregationForm.WindowState = FormWindowState.Normal;
                 aggregationForm.FormClosed += (s, e) => RecalculateStats();
-                nextAggregationTime = DateTime.Now.AddMinutes(Settings.MinutesBetweenDataAggregation);
+                nextAggregationTime = DateTime.Now.AddMinutes(Statics.Settings.MinutesBetweenDataAggregation);
             }
         }
 

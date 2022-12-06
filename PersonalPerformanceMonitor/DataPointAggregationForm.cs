@@ -50,7 +50,7 @@ namespace PersonalPerformanceMonitor
 		{
 			if (!edit)
 				DataManager.AddDataPoint(dataPoint);
-			DataManager.SaveToStorage();
+			DataManager.SaveDataToStorage();
 			this.Close();
 		}
 
